@@ -3,7 +3,7 @@ from flask_login import login_user, login_required, logout_user
 from werkzeug.security import check_password_hash, generate_password_hash
 
 from project import app, db
-from project.models import Message, User, Item
+from project.models import Message, User, Item, Thing
 
 
 @app.route('/', methods=['GET'])
@@ -20,6 +20,11 @@ def main():
 @app.route('/class', methods=['GET'])
 def tasks():
     return render_template('classes.html', items=Item.query.all())
+
+
+@app.route('/list', methods=['GET'])
+def list():
+    return render_template('list.html', things=Thing.query.all())
 
 
 @app.route('/add_message', methods=['POST'])
@@ -77,6 +82,21 @@ def register():
             return redirect(url_for('login_page'))
 
     return render_template('register.html')
+
+
+@app.route('/add_list', methods=['GET', 'POST'])
+@login_required
+def things():
+    name = request.form.get('name')
+    number = request.form.get('number')
+
+    if request.method == 'POST':
+        db.session.add(Message(name, number))
+        db.session.commit()
+
+        return redirect(url_for('list'))
+
+    return render_template('add_list.html')
 
 
 @app.route('/logout', methods=['GET', 'POST'])

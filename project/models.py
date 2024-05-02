@@ -29,6 +29,12 @@ class User(db.Model, UserMixin):
     miss = db.Column(db.Integer)
 
 
+class Thing(db.Model, UserMixin):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(128), nullable=False)
+    number = db.Column(db.Integer)
+
+
 class Item(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(128), nullable=False, unique=True)
