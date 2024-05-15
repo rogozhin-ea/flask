@@ -66,7 +66,6 @@ def register():
     login = request.form.get('login')
     password = request.form.get('password')
     password2 = request.form.get('password2')
-    miss = request.form.get('missing')
 
     if request.method == 'POST':
         if not (login or password or password2):
@@ -75,7 +74,7 @@ def register():
             flash('Passwords are not equal!')
         else:
             hash_pwd = generate_password_hash(password)
-            new_user = User(login=login, password=hash_pwd, miss=miss)
+            new_user = User(login=login, password=hash_pwd)
             db.session.add(new_user)
             db.session.commit()
 
@@ -85,13 +84,13 @@ def register():
 
 
 @app.route('/add_list', methods=['GET', 'POST'])
-@login_required
 def things():
     name = request.form.get('name')
     number = request.form.get('number')
 
     if request.method == 'POST':
-        db.session.add(Message(name, number))
+        new_thing = Thing(name=name, number=number)
+        db.session.add(new_thing)
         db.session.commit()
 
         return redirect(url_for('list'))
